@@ -1,0 +1,40 @@
+{
+    "name": "daraja-wrapper",
+    "version": "1.0.0",
+    "description": "Mini-Daraja is the most popular and widely used Node.js library for seamless integration with the Safaricom Daraja API. It simplifies handling M-Pesa operations like STK Push, B2C, C2B, transaction status, and balance inquiries, with modern ES6 module support and robust error handling.",
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.js",
+    "types": "dist/index.d.ts",
+    "type": "module",
+    "scripts": {
+      "build": "tsc",
+      "test": "jest --coverage",
+      "lint": "eslint src/**/*.ts",
+      "prepublishOnly": "npm run lint && npm test && npm run build"
+    },
+    "dependencies": {
+      "axios": "^1.0.0"
+    },
+    "author": "William Achuchi Wanyama",
+    "license": "MIT",
+    "keywords": [
+      "daraja",
+      "mpesa",
+      "safaricom",
+      "api",
+      "wrapper",
+      "integration",
+      "stk",
+      "mini-daraja"
+    ],
+    "devDependencies": {
+      "typescript": "^5.0.0",
+      "jest": "^29.0.0",
+      "eslint": "^8.0.0",
+      "prettier": "^2.0.0",
+      "@types/node": "^18.0.0",
+      "@types/jest": "^29.0.0",
+      "ts-jest": "^29.0.0"
+    }
+  }
+  
