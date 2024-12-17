@@ -25,7 +25,7 @@ npm install mini-daraja
 
 ## Usage
 
-### STK Push
+#### STK Push
 
 Usage example for STK push:
 
