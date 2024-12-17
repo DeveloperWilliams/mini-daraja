@@ -25,7 +25,7 @@ npm install mini-daraja
 
 ## Usage
 
-Usage example for Initialize Daraja API instance with credentials
+##### Usage example for Initialize Daraja API instance with credentials
 
 ```javascript
 import mpesa from 'mini-daraja';
@@ -39,7 +39,7 @@ const daraja = mpesa({
   callbackUrl: 'https://example.com/callback', // Replace with your Callback URL
 });
 ```
-1. STK Push Example
+##### STK Push Example
 ```javascript
  // Function to perform STK Push
 async function stkPush() {
