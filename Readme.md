@@ -25,7 +25,7 @@ npm install mini-daraja
 
 ## Usage
 
-Usage example for STK push:
+Usage example for Initialize Daraja API instance with credentials
 
 ```javascript
 import mpesa from 'mini-daraja';
@@ -38,19 +38,18 @@ const daraja = mpesa({
   passKey: 'your_pass_key_here',           // Replace with your PassKey
   callbackUrl: 'https://example.com/callback', // Replace with your Callback URL
 });
-
-// Function to perform STK Push
+```
+1. STK Push Example
+```javascript
+ // Function to perform STK Push
 async function stkPush() {
   try {
-    console.log('🔄 Initiating STK Push...');
-
     const response = await daraja.stkPush({
       phoneNumber: '254708966189',           // Customer's phone number (E.164 format)
       amount: 100,                          // Transaction amount
       accountReference: 'Invoice123',        // Custom account reference
       transactionDescription: 'Test Payment', // Transaction description
     });
-
     console.log('✅ STK Push Response:', response);
   } catch (error) {
     console.error('❌ STK Push Error:', error.message);
@@ -60,7 +59,6 @@ async function stkPush() {
 stkPush();
 
 ```
-
 ---
 
 ## Contact
