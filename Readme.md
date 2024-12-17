@@ -25,8 +25,6 @@ npm install mini-daraja
 
 ## Usage
 
-#### STK Push
-
 Usage example for STK push:
 
 ```javascript
@@ -67,10 +65,10 @@ stkPush();
 
 ## Contact
 
-Feel free to contact me via:
-
-- Email: [archywilliams2@gmail.com](mailto:archywilliams2@gmail.com)
-- X: [@yourhandle](https://x.com/dev_williee)
-- LinkedIn: [William Achuchi Wanyama](https://linkedin.com/in/achuchi)
-
 Designed by *William Achuchi Wanyama*
+            - Email: [archywilliams2@gmail.com](mailto:archywilliams2@gmail.com)
+            - X: [@dev_williee](https://x.com/dev_williee)
+            - LinkedIn: [William Achuchi Wanyama](https://linkedin.com/in/achuchi)
+
+
+            
