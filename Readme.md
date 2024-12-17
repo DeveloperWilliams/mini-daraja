@@ -13,7 +13,7 @@ Mini-Daraja is the most popular and widely used Node.js library for seamless int
 
 ---
 
-# Installation
+## Installation
 
 To install, run:
 
@@ -23,9 +23,9 @@ npm install mini-daraja
 
 ---
 
-# Usage
+## Usage
 
-## STK Push
+### STK Push
 
 Usage example for STK push:
 
@@ -65,7 +65,7 @@ stkPush();
 
 ---
 
-# Contact
+## Contact
 
 Feel free to contact me via:
 
