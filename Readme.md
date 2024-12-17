@@ -55,9 +55,6 @@ async function stkPush() {
     console.error('❌ STK Push Error:', error.message);
   }
 }
-
-stkPush();
-
 ```
 
 ## Contact
