@@ -66,9 +66,9 @@ stkPush();
 ## Contact
 
 Designed by *William Achuchi Wanyama*
-            - Email: [archywilliams2@gmail.com](mailto:archywilliams2@gmail.com)
-            - X: [@dev_williee](https://x.com/dev_williee)
-            - LinkedIn: [William Achuchi Wanyama](https://linkedin.com/in/achuchi)
+ - Email: [archywilliams2@gmail.com](mailto:archywilliams2@gmail.com)
+ - X: [@dev_williee](https://x.com/dev_williee)
+ - LinkedIn: [William Achuchi Wanyama](https://linkedin.com/in/achuchi)
 
 
             
