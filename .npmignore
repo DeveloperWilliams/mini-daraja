@@ -1,0 +1,6 @@
+src/tests/
+.env
+*.test.js
+.eslintrc.json
+.prettierrc
+coverage/

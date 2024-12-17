@@ -1,16 +1,22 @@
 {
-    "compilerOptions": {
-      "target": "es6",
-      "module": "es6",
-      "declaration": true,
-      "outDir": "dist",
-      "strict": true,
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "moduleResolution": "node",
-      "skipLibCheck": true
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules", "dist", "tests"]
-  }
-  
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
+    "declaration": true,
+    "outDir": "dist/esm",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "paths": {
+      "@utils/*": ["src/utils/*"],        // Alias for utility files
+      "@models/*": ["src/models/*"],      // Alias for any model definitions
+      "@core/*": ["src/core/*"],          // Alias for core files (optional)
+      "*": ["src/*"]                      // Catch-all fallback alias
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests"]
+}
