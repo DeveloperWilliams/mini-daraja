@@ -1,4 +1,3 @@
-
 # **Mini-Daraja**
 **Seamless M-Pesa Integration for Node.js**
 
@@ -22,6 +21,8 @@ To install, run:
 npm install mini-daraja
 ```
 
+---
+
 # Usage
 
 ## STK Push
@@ -31,29 +32,38 @@ Usage example for STK push:
 ```javascript
 import mpesa from 'mini-daraja';
 
-const mpesa = mpesa({
-    consumerKey: 'yourKey',
-    consumerSecret: 'yourSecret',
-    shortCode: '174379',
-    passKey: 'your_pass_key_here',
-    callbackUrl: 'https://example.com/callback',
+// Initialize Daraja API instance with credentials
+const daraja = mpesa({
+  consumerKey: 'your_consumer_key',        // Replace with your Consumer Key
+  consumerSecret: 'your_consumer_secret',  // Replace with your Consumer Secret
+  shortCode: '174379',                     // Replace with your M-Pesa Shortcode
+  passKey: 'your_pass_key_here',           // Replace with your PassKey
+  callbackUrl: 'https://example.com/callback', // Replace with your Callback URL
 });
 
+// Function to perform STK Push
 async function stkPush() {
   try {
-    console.log('Initiating STK Push...');
-    const response = await credentials.stkPush({
-      phoneNumber: '254708966189',
-      amount: 1,
-      accountReference: 'test',
-      transactionDescription: 'test',
+    console.log('🔄 Initiating STK Push...');
+
+    const response = await daraja.stkPush({
+      phoneNumber: '254708966189',           // Customer's phone number (E.164 format)
+      amount: 100,                          // Transaction amount
+      accountReference: 'Invoice123',        // Custom account reference
+      transactionDescription: 'Test Payment', // Transaction description
     });
-    console.log(response);
+
+    console.log('✅ STK Push Response:', response);
   } catch (error) {
-    console.error('STK Push Error:', error.message);
+    console.error('❌ STK Push Error:', error.message);
   }
 }
+
+stkPush();
+
 ```
+
+---
 
 # Contact
 
@@ -63,4 +73,4 @@ Feel free to contact me via:
 - X: [@yourhandle](https://x.com/dev_williee)
 - LinkedIn: [William Achuchi Wanyama](https://linkedin.com/in/achuchi)
 
-#
+Designed by *William Achuchi Wanyama*
