@@ -17,11 +17,15 @@ export interface MpesaOptions {
   queueTimeOutURL?: string;
   resultURL?: string;
 }
-/*
- *Module to Simplfy Mpesa Integration
+
+/**
+ * This module provides a simple interface for interacting with the Safaricom M-Pesa API.
  */
 class Mpesa {
   private token: string | null = null;
+  private baseUrl: string;
+  private currentEnvironment: 'Production' | 'Sandbox';
+  private logTimer: NodeJS.Timeout | null = null;
 
   constructor(private options: MpesaOptions) {
     const requiredFields = [
@@ -39,6 +43,50 @@ class Mpesa {
         `Missing required Mpesa credentials: ${missingFields.join(', ')}`
       );
     }
+
+    // Default environment is Production, but defer logging.
+    this.baseUrl = 'https://api.safaricom.co.ke';
+    this.currentEnvironment = 'Production';
+
+    // Log environment only if it hasn't been switched within 100ms.
+    this.logTimer = setTimeout(() => {
+      if (this.currentEnvironment === 'Production') {
+        console.info(
+          `Daraja Environment set to Production. Call .sandbox() to switch.`
+        );
+      }
+    }, 100);
+  }
+
+  /**
+   * Switch to Sandbox environment
+   */
+  sandbox(): void {
+    if (this.logTimer) clearTimeout(this.logTimer); // Cancel the deferred Production log
+    this.baseUrl = 'https://sandbox.safaricom.co.ke';
+    this.logEnvironmentChange('Sandbox');
+  }
+
+  /**
+   * Switch to Production environment
+   */
+  production(): void {
+    if (this.logTimer) clearTimeout(this.logTimer); // Cancel the deferred Production log
+    this.baseUrl = 'https://api.safaricom.co.ke';
+    this.logEnvironmentChange('Production'); // Always log when called
+  }
+
+  /**
+   * Logs environment changes only when the function is explicitly called.
+   */
+  private logEnvironmentChange(newEnvironment: 'Production' | 'Sandbox'): void {
+    if (this.currentEnvironment !== newEnvironment) {
+      this.currentEnvironment = newEnvironment;
+      console.info(`Daraja Environment set to ${newEnvironment}.`);
+    } else {
+      // Log explicitly if already set to the requested environment
+      console.info(`Daraja Environment is already set to ${newEnvironment}.`);
+    }
   }
 
   async authenticate(): Promise<string> {
@@ -50,8 +98,12 @@ class Mpesa {
     return this.token;
   }
 
-  /*
-   * Function for Stkpush Initializatio
+  /**
+   * Initiates a Lipa Na M-Pesa (STK Push) transaction.
+   * @param phoneNumber - The phone number of the customer.
+   * @param amount - The amount to send.
+   * @returns The response from the STK Push transaction request.
+   * @throws An error if the request fails.
    */
   async stkPush({
     phoneNumber,
@@ -69,11 +121,16 @@ class Mpesa {
       shortCode: this.options.shortCode,
       passKey: this.options.passKey,
       callbackUrl: this.options.callbackUrl,
+      isSandbox: this.baseUrl === 'https://sandbox.safaricom.co.ke', // Determine environment dynamically
     });
   }
 
-  /*
-   * Function for bussiness to client
+  /**
+   * Initiates a Business-to-Customer (B2C) transaction.
+   * @param phoneNumber - The phone number of the recipient.
+   * @param amount - The amount to send.
+   * @returns The response from the B2C transaction request.
+   * @throws An error if the request fails.
    */
   async b2c({
     phoneNumber,
@@ -83,12 +140,12 @@ class Mpesa {
     amount: number;
   }): Promise<any> {
     await this.ensureToken();
-    return b2c(this.token!, {
-      commandID: 'BusinessPayment', // Default value
+    return b2c(this.token!, this.baseUrl.includes('sandbox'), {
+      commandID: 'BusinessPayment',
       amount,
-      partyA: this.options.shortCode, // Automatically added
-      partyB: phoneNumber, // Attached internally
-      remarks: 'Salary Payment', // Default value
+      partyA: this.options.shortCode,
+      partyB: phoneNumber,
+      remarks: 'Salary Payment',
       initiatorName: this.options.initiatorName!,
       securityCredential: this.options.securityCredential!,
       queueTimeOutURL: this.options.queueTimeOutURL!,
@@ -96,8 +153,13 @@ class Mpesa {
     });
   }
 
-  /*
-   * Function for client to  bussiness
+  /**
+   * Initiates a Client-to-Business (C2B) transaction.
+   * @param phoneNumber - The phone number of the customer.
+   * @param amount - The amount to send.
+   * @param billRefNumber - The reference number for the bill.
+   * @returns The response from the C2B transaction request.
+   * @throws An error if the request fails.
    */
   async c2b({
     phoneNumber,
@@ -109,7 +171,7 @@ class Mpesa {
     billRefNumber: string;
   }): Promise<any> {
     await this.ensureToken();
-    return c2b(this.token!, {
+    return c2b(this.token!, this.baseUrl.includes('sandbox'), {
       shortCode: this.options.shortCode,
       commandID: 'CustomerPayBillOnline', // Default value
       amount,
@@ -118,12 +180,7 @@ class Mpesa {
       passKey: this.options.passKey,
     });
   }
-  
-  
 
-  /*
-   * Function for reversal back to client
-   */
   async reversal({
     phoneNumber,
     amount,
@@ -147,21 +204,20 @@ class Mpesa {
     });
   }
 
-  /*
-   * Function for account Balance check
-   */
   async accountBalance(): Promise<any> {
     await this.ensureToken();
-    return accountBalance(this.token!, {
-      commandID: 'AccountBalance', // Default value
-      partyA: this.options.shortCode, // Automatically added
-      remarks: 'Balance Inquiry', // Default value
+    return accountBalance(this.token!, this.baseUrl.includes('sandbox'), {
+      commandID: 'AccountBalance',
+      partyA: this.options.shortCode,
+      identifierType: '4',
+      remarks: 'Balance Inquiry',
       initiatorName: this.options.initiatorName!,
       securityCredential: this.options.securityCredential!,
       queueTimeOutURL: this.options.queueTimeOutURL!,
       resultURL: this.options.resultURL!,
     });
   }
+  
 
   async b2b({
     amount,
