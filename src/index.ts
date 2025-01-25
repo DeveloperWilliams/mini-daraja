@@ -181,29 +181,49 @@ class Mpesa {
     });
   }
 
-  async reversal({
-    phoneNumber,
+/**
+ * Initiates a Business-to-Business (B2B) transaction.
+ * @param amount - The amount to send.
+ * @param partyB - The phone number of the recipient.
+ * @param accountReference - The reference number for the transaction.
+ * @param requester - The Phone number of the sender requesting the transaction.
+ */
+async b2b ({
+  amount,
+  partyB,
+  accountReference,
+  requester,
+}: {
+  amount: number;
+  partyB: string;
+  accountReference: string;
+  requester: string;
+}): Promise<any> {
+  await this.ensureToken();
+  return b2b(this.token!, this.baseUrl.includes('sandbox'), {
+    initiatorName: this.options.initiatorName!,
+    securityCredential: this.options.securityCredential!,
+    commandID: 'BusinessPayBill',
+    senderIdentifierType: '4',
+    recieverIdentifierType: '4',
     amount,
-    transactionID,
-  }: {
-    phoneNumber: string;
-    amount: number;
-    transactionID: string;
-  }): Promise<any> {
-    await this.ensureToken();
-    return reversal(this.token!, {
-      commandID: 'TransactionReversal', // Default value
-      transactionID,
-      amount,
-      receiverParty: phoneNumber, // Attached internally as receiverParty
-      remarks: 'Reversal Test', // Default value
-      initiatorName: this.options.initiatorName!,
-      securityCredential: this.options.securityCredential!,
-      queueTimeOutURL: this.options.queueTimeOutURL!,
-      resultURL: this.options.resultURL!,
-    });
-  }
+    partyA: this.options.shortCode,
+    partyB,
+    accountReference,
+    requester,
+    remarks: 'Business Payment',
+    queueTimeOutURL: this.options.queueTimeOutURL!,
+    resultURL: this.options.resultURL!,
+  });
+}
 
+
+
+  /**
+   * Initiates a account balance request.
+   * @returns The response from the account balance request.
+   * @throws An error if the request fails.
+   */
   async accountBalance(): Promise<any> {
     await this.ensureToken();
     return accountBalance(this.token!, this.baseUrl.includes('sandbox'), {
@@ -217,29 +237,46 @@ class Mpesa {
       resultURL: this.options.resultURL!,
     });
   }
-  
 
-  async b2b({
+  /**
+   * Initiates Business-to-Business (B2B) transaction.
+   * @param amount - The amount to send.
+   * @param partyB - The phone number of the recipient.
+   * @param accountReference - The reference number for the transaction.
+   */
+ 
+
+  /**
+   * Initiates a reversal request.
+   * @param transactionID - The transaction ID to reverse.
+   * @param amount - The amount to reverse.
+   * @param receiverParty - The recipient of the reversed funds.
+   * @param receiverIdentifierType - The type of identifier for the receiver.Default value is 11 (MSISDN). Use 4 for short code.
+   * @throws An error if the request fails.
+   */
+
+  async reversal({
+    transactionID,
     amount,
-    partyB,
-    accountReference,
+    receiverParty,
   }: {
+    transactionID: string;
     amount: number;
-    partyB: string;
-    accountReference: string;
+    receiverParty: string;
   }): Promise<any> {
     await this.ensureToken();
-    return b2b(this.token!, {
-      commandID: 'BusinessToBusinessTransfer', // Default value
-      amount,
-      partyA: this.options.shortCode, // Automatically added
-      partyB,
-      remarks: 'B2B Payment', // Default value
-      accountReference,
+    return reversal(this.token!, this.baseUrl.includes('sandbox'), {
       initiatorName: this.options.initiatorName!,
       securityCredential: this.options.securityCredential!,
-      queueTimeOutURL: this.options.queueTimeOutURL!,
+      commandID: 'TransactionReversal',
+      transactionID,
+      amount,
+      receiverParty,
+      recieverIdentifierType: '11',
       resultURL: this.options.resultURL!,
+      queueTimeOutURL: this.options.queueTimeOutURL!,
+      remarks: 'Reversal',
+      ocassion: 'Reversal',
     });
   }
 
@@ -249,6 +286,12 @@ class Mpesa {
     }
   }
 }
+
+/**
+ * Creates an instance of the Mpesa class.
+ * @param options - The Mpesa configuration options.
+ * @returns An instance of the Mpesa class.
+ */
 
 export default function createMpesa(options: MpesaOptions): Mpesa {
   return new Mpesa(options);
